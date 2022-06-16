@@ -9,11 +9,11 @@ This package will allow you to take multiple camera picture at once and return t
 
 ## Getting started
 
-This package uses the ![camera](https://pub.dev/packages/camera#installation "Camera package") package, so please follow the setup for iOS and Android. 
+This package uses the [camera](https://pub.dev/packages/camera#installation "Camera package") package, so please follow the setup for iOS and Android. 
 
 ## Usage
 
-Full example at ![example folder](example "example folder"). 
+Full example at [example folder](example "example folder"). 
 
 ```dart
 final results = await Navigator.of(context).push(
