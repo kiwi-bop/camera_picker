@@ -17,7 +17,7 @@ Full example at [example folder](example "example folder").
 
 ```dart
 final results = await Navigator.of(context).push(
-  MaterialPageRoute(builder: (context) =>CameraPicker())
+  MaterialPageRoute(builder: (context) => CameraPicker())
 );
 if (results != null) {
   //Do whatever you want with the files.
