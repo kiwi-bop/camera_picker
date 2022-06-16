@@ -16,21 +16,11 @@ This package uses the [camera](https://pub.dev/packages/camera#installation "Cam
 Full example at [example folder](example "example folder"). 
 
 ```dart
-final results = await
-Navigator.of(context).
-push
-(
-MaterialPageRoute
-(
-builder: (
-context) =>
-CameraPicker
-(
-)));
-if
-(
-results != null) {
-//Do whatever you want with the files.
+final results = await Navigator.of(context).push(
+  MaterialPageRoute(builder: (context) =>CameraPicker())
+);
+if (results != null) {
+  //Do whatever you want with the files.
 }
 ```
 
@@ -39,4 +29,4 @@ results != null) {
 You can customize colors, show/icon the different buttons and specify minimum and maximum number of
 picture you want.
 
-To see full list of customization please read [CameraPicker](lib/camera_picker.dart).
+To see full list of customization please read [CameraPicker](lib/camera_picker.dart#L18).
