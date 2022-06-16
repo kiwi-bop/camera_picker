@@ -4,12 +4,15 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:camera/camera.dart';
-import 'package:camera_picker/picker_store.dart';
+import 'package:camera_picker/src/picker_store.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 export 'package:cross_file/cross_file.dart';
+
+const _defaultPreviewHeight = 60.0;
+const _defaultPreviewWidth = 80.0;
 
 /// A CameraPicker.
 class CameraPicker extends HookWidget {
@@ -37,6 +40,12 @@ class CameraPicker extends HookWidget {
   /// Color to use for icons
   final Color iconColor;
 
+  /// Height of the preview, default to 60
+  final double previewHeight;
+
+  /// Widget of the preview, default to 80
+  final double previewWidth;
+
   /// Callback when an existing picture is asked to be delete, return true or false to continue deletion
   final FutureOr<bool> Function(XFile file)? onDelete;
 
@@ -49,6 +58,8 @@ class CameraPicker extends HookWidget {
   const CameraPicker({
     Key? key,
     this.initialFiles,
+    this.previewHeight = _defaultPreviewHeight,
+    this.previewWidth = _defaultPreviewWidth,
     this.noCameraBuilder,
     this.showSwitchCameraButton = true,
     this.onDelete,
@@ -192,6 +203,10 @@ class CameraPicker extends HookWidget {
                                         useListenable(store);
                                         return ImagesPreview(
                                           files: store.filesData,
+                                          iconColor: iconColor,
+                                          borderColor: iconColor,
+                                          previewWidth: previewWidth,
+                                          previewHeight: previewHeight,
                                           onDelete: (index) async {
                                             if (onDelete == null || await onDelete!(store.filesData[index])) {
                                               store.removeFile(store.filesData[index]);
@@ -231,24 +246,22 @@ class CameraPicker extends HookWidget {
                                               Icons.photo_camera_outlined,
                                             ),
                                           ),
-                                          HookBuilder(
-                                            builder: (context) {
-                                              useListenable(store);
-                                              return IconButton(
-                                                onPressed: store.canContinue
-                                                    ? () {
-                                                        cameraController.dispose();
-                                                        Navigator.of(context).pop(store.filesData);
-                                                      }
-                                                    : null,
-                                                enableFeedback: true,
-                                                tooltip: MaterialLocalizations.of(context).okButtonLabel,
-                                                icon: const Icon(Icons.check),
-                                                disabledColor: Colors.grey[600],
-                                                color: iconColor,
-                                              );
-                                            }
-                                          ),
+                                          HookBuilder(builder: (context) {
+                                            useListenable(store);
+                                            return IconButton(
+                                              onPressed: store.canContinue
+                                                  ? () {
+                                                      cameraController.dispose();
+                                                      Navigator.of(context).pop(store.filesData);
+                                                    }
+                                                  : null,
+                                              enableFeedback: true,
+                                              tooltip: MaterialLocalizations.of(context).okButtonLabel,
+                                              icon: const Icon(Icons.check),
+                                              disabledColor: Colors.grey[600],
+                                              color: iconColor,
+                                            );
+                                          }),
                                         ],
                                       ),
                                     ],
@@ -270,11 +283,35 @@ class CameraPicker extends HookWidget {
   }
 }
 
+/// ImagesPreview is a widget to show preview of files with
 class ImagesPreview extends HookWidget {
+  /// Files to show in preview
   final List<XFile> files;
+
+  /// Callback when delete button is pressed, but don't delete the file, that's on you to so it and update [files]
   final Function(int index)? onDelete;
 
-  const ImagesPreview({Key? key, this.onDelete, required this.files}) : super(key: key);
+  /// Height of the preview, default to 60
+  final double previewHeight;
+
+  /// Widget of the preview, default to 80
+  final double previewWidth;
+
+  /// Icon color
+  final Color iconColor;
+
+  /// Border color
+  final Color borderColor;
+
+  const ImagesPreview({
+    Key? key,
+    this.previewHeight = _defaultPreviewHeight,
+    this.previewWidth = _defaultPreviewWidth,
+    this.iconColor = Colors.white,
+    this.borderColor = Colors.white,
+    this.onDelete,
+    required this.files,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -287,6 +324,10 @@ class ImagesPreview extends HookWidget {
           for (var i = 0; i < ioFiles.length; i++)
             ImagePreview(
               file: ioFiles[i],
+              previewHeight: previewHeight,
+              previewWidth: previewWidth,
+              borderColor: borderColor,
+              iconColor: iconColor,
               onDelete: onDelete == null
                   ? null
                   : () {
@@ -299,13 +340,24 @@ class ImagesPreview extends HookWidget {
   }
 }
 
+/// Preview on one single image use in [ImagePreviews]
 class ImagePreview extends StatelessWidget {
+  // File to preview
   final File file;
+
+  /// Border color of the preview
   final Color borderColor;
+
+  /// Icon color of the preview
   final Color iconColor;
-  final Color? disabledIconColor;
+
+  /// Delete button pressed callback, delegate the actual deletion to you
   final VoidCallback? onDelete;
+
+  /// Height of the preview, default to 60
   final double previewHeight;
+
+  /// Widget of the preview, default to 80
   final double previewWidth;
 
   const ImagePreview(
@@ -314,7 +366,6 @@ class ImagePreview extends StatelessWidget {
       this.previewWidth = 80,
       this.onDelete,
       required this.file,
-      this.disabledIconColor,
       this.iconColor = Colors.white,
       this.borderColor = Colors.white})
       : super(key: key);
@@ -342,7 +393,6 @@ class ImagePreview extends StatelessWidget {
                   child: IconButton(
                     onPressed: onDelete,
                     color: iconColor,
-                    disabledColor: disabledIconColor,
                     iconSize: 18,
                     tooltip: MaterialLocalizations.of(context).deleteButtonTooltip,
                     icon: const Icon(Icons.cancel),

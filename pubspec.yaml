@@ -1,6 +1,6 @@
 name: camera_picker
 description: Flutter camera picker to take multiple images
-version: 0.0.1
+version: 1.0.0
 homepage:
 
 environment:
