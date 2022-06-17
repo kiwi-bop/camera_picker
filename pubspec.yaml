@@ -1,6 +1,6 @@
 name: camera_picker
 description: Flutter camera picker to take multiple images with live preview
-version: 1.0.0+1
+version: 1.0.0+2
 homepage: https://github.com/kiwi-bop/camera_picker
 
 environment:

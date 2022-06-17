@@ -74,7 +74,7 @@ class CameraPicker extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final store = useMemoized(() => PickerStore(filesData: initialFiles ?? [], minPicture: minPicture, maxPicture: maxPicture));
+    final store = useMemoized(() => PickerStore(filesData: List.from(initialFiles ?? []), minPicture: minPicture, maxPicture: maxPicture));
     final availableCamerasFuture = useMemoized(() => availableCameras());
     final cameras = useState<List<CameraDescription>?>(null);
     return Material(
