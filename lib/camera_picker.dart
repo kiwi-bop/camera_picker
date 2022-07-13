@@ -85,7 +85,7 @@ class CameraPicker extends HookWidget {
           color: Colors.black,
           child: FutureBuilder<List<CameraDescription>>(
             builder: (context, snapshot) {
-              WidgetsBinding.instance?.addPostFrameCallback((_) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
                 if (snapshot.connectionState == ConnectionState.done) {
                   cameras.value ??= snapshot.data ?? [];
                 }
