@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 export 'package:cross_file/cross_file.dart';
+export 'package:camera/camera.dart';
 
 const _defaultPreviewHeight = 60.0;
 const _defaultPreviewWidth = 80.0;
